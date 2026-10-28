@@ -31,16 +31,58 @@ class DepositoStrumenti:
         self._responsabile = responsabile
 
     def get_strumenti(self) -> list[Strumento] | None:
-        """
-            Funzione che legge tutti gli strumenti nel database
-            :return: una lista con tutti gli strumenti presenti oppure None
-        """
-        # TODO
+        conn = get_connection()
+        if conn is None:
+            print("ERRORE: connessione al database non riuscita")
+            return None
+
+        risultati = []
+        try:
+            cursor = conn.cursor(dictionary=True)
+            query = """
+                        SELECT *
+                        FROM strumento
+                        """
+
+            cursor.execute(query)
+            for row in cursor:
+                risultati.append(Strumento(**row))
+
+            cursor.close()
+            return risultati
+
+        except Exception as e:
+            print(f"Errore durante il recupero degli strumenti: {e}")
+            return None
+
+        finally:
+            conn.close()
 
     def cerca_strumenti_per_tipo(self, tipo) -> list[Strumento] | None:
-        """
-            Funzione che recupera una lista con tutti gli strumenti presenti nel database di un certo tipo
-            :param tipo: il tipo dello strumento (es. "Chitarra")
-            :return: una lista con tutti gli strumenti del tipo indicato oppure None
-        """
-        # TODO
+        conn = get_connection()
+        if conn is None:
+            return None
+
+        risultati = []
+
+        try:
+            cursor = conn.cursor(dictionary=True)
+            query = """
+                SELECT *
+                FROM strumento
+                WHERE tipo = %s
+                """
+
+            cursor.execute(query, (tipo,))
+            for row in cursor:
+                risultati.append(Strumento(**row))
+
+            cursor.close()
+            return risultati
+
+        except Exception as e:
+            print(f"Errore durante la ricerca degli strumenti: {e}")
+            return None
+
+        finally:
+            conn.close()

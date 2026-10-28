@@ -63,7 +63,17 @@ class View:
         pulsante_conferma_responsabile = ft.Button("Conferma", on_click=self.controller.conferma_responsabile)
 
         # Altri Pulsanti da implementare (es. "Mostra" e "Cerca")
-        # TODO
+        # Pulsante per mostrare tutti gli strumenti presenti nel database
+        pulsante_mostra = ft.Button(
+            "Mostra",
+            on_click=self.controller.mostra_strumenti
+        )
+
+        # Pulsante per cercare gli strumenti in base al tipo
+        pulsante_cerca = ft.Button(
+            "Cerca",
+            on_click=self.controller.cerca_strumenti
+        )
 
         # --- LAYOUT ---
         self.page.add(
@@ -81,11 +91,42 @@ class View:
                    alignment=ft.MainAxisAlignment.CENTER),
             ft.Divider(),
 
-            # Sezione 3
-            # TODO
+            # Sezione 3: visualizzazione di tutti gli strumenti
+            ft.Row(
+                controls=[
+                    ft.Text("Strumenti", size=20),
+                    pulsante_mostra
+                ],
+                spacing=10,
+                alignment=ft.MainAxisAlignment.START
+            ),
+            # Contenitore che visualizza la lista degli strumenti
+            ft.Container(
+                content=self.lista_strumenti,
+                height=120,
+                width=600
+            ),
+            ft.Divider(),
+
 
             # Sezione 4
-            # TODO
+            ft.Text("Cerca Strumento per Tipo", size=20),
+            # Campo di ricerca e pulsante Cerca
+            ft.Row(
+                controls=[
+                    self.input_tipo_strumento,
+                    pulsante_cerca
+                ],
+                spacing=10,
+                alignment=ft.MainAxisAlignment.CENTER
+            ),
+
+            # Contenitore che mostra gli strumenti trovati
+            ft.Container(
+                content=self.lista_strumenti_ricerca,
+                height=200,
+                width=600
+            )
         )
 
     def cambia_tema(self, e):
